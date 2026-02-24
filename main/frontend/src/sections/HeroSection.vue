@@ -6,6 +6,7 @@
         <h1 class="hero-h1">
           Jan.<br>
           <span class="pink">Sultan</span><br>
+          <span class="italic">in training.</span><br> 
           <span class="ghost">Cybersecurity</span>
         </h1>
         <p class="hero-p">
