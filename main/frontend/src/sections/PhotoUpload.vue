@@ -2,7 +2,7 @@
   <div class="photo-block">
     <div class="photo-frame">
       <img 
-        src="../assets/profile.jpg" 
+        src="../assets/profile.jpg"
         alt="Jan Sultan" 
         class="photo-img"
       >
@@ -14,67 +14,63 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-
-const input = ref(null)
-const photoUrl = ref('')
-const isDragging = ref(false)
-
-const triggerUpload = () => input.value?.click()
-
-const handleFile = (e) => {
-  const file = e.target.files[0]
-  if (file) readFile(file)
-}
-
-const handleDrop = (e) => {
-  isDragging.value = false
-  const file = e.dataTransfer.files[0]
-  if (file && file.type.startsWith('image/')) readFile(file)
-}
-
-const readFile = (file) => {
-  const reader = new FileReader()
-  reader.onload = (ev) => { photoUrl.value = ev.target.result }
-  reader.readAsDataURL(file)
-}
-</script>
-
 <style scoped>
-.photo-block{margin-bottom:1.25rem;}
-.photo-frame{
-  width:100%;aspect-ratio:1/1;
-  background:var(--ink2);
-  border:1px dashed var(--rule2);
-  border-radius:4px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  position:relative;overflow:hidden;
-  transition:border-color .25s, background .25s;
+.photo-block {
+  margin-bottom: 1.25rem;
 }
-.photo-frame:hover{border-color:var(--pink);background:var(--ink3);}
-.photo-inner{
-  display:flex;flex-direction:column;align-items:center;gap:.9rem;
-  padding:1.5rem;text-align:center;
-  pointer-events:none;
+
+.photo-frame {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: var(--ink2);
+  border: 1px solid var(--rule2);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
 }
-.photo-avatar{width:64px;height:64px;opacity:.6;}
-.photo-hint{
-  font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-  color:var(--muted2);line-height:1.6;
+
+.photo-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(244,167,185,0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
 }
-.photo-hint span{color:var(--muted2);transition:color .2s;font-size:9px;}
-.photo-meta{
-  padding:.85rem 0 0;
-  display:flex;flex-direction:column;gap:3px;
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(20%) contrast(1.05);
+  transition: filter 0.3s ease, transform 0.3s ease;
 }
-.photo-name{
-  font-family:var(--serif);font-size:1.05rem;font-weight:700;
-  color:var(--white);
+
+.photo-frame:hover .photo-img {
+  filter: grayscale(0%) contrast(1.1);
+  transform: scale(1.02);
 }
-.photo-role{
-  font-family:var(--mono);font-size:10px;letter-spacing:.08em;
-  color:var(--pink);text-transform:uppercase;
+
+.photo-meta {
+  padding: 0.85rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.photo-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.photo-role {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--pink);
+  text-transform: uppercase;
 }
 </style>
