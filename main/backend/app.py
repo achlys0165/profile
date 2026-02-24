@@ -5,12 +5,18 @@ import os
 
 app = Flask(__name__)
 
-# CORS
-CORS(app, origins=[
-    os.environ.get("FRONTEND_URL", "http://localhost:3000"),
-    "http://localhost:5173"
-])
-
+# CORS - allow your Vercel domain and localhost
+CORS(app, resources={
+    r"/api/*": {
+        "origins": [
+            "https://jan-sultan.vercel.app/p",  # Your actual Vercel URL
+            "http://localhost:3000",
+            "http://localhost:5173"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 # Supabase REST API config
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY")

@@ -4,13 +4,12 @@
       <div class="hero-left">
         <p class="hero-kicker">Cybersecurity Portfolio · 2025</p>
         <h1 class="hero-h1">
-          Student.<br>
-          <span class="pink">Hacker</span><br>
-          <span class="italic">in training.</span><br>
-          <span class="ghost">Builder.</span>
+          Jan.<br>
+          <span class="pink">Sultan</span><br>
+          <span class="ghost">Cybersecurity</span>
         </h1>
         <p class="hero-p">
-          Aspiring <strong>penetration tester</strong> & Python developer.
+          Aspiring <strong>penetration tester</strong>.
           I pull things apart to understand how they work — then build them better.
         </p>
         <div class="hero-cta">
