@@ -313,15 +313,6 @@ Submit contact form.
 | message | text | Visitor message |
 | created_at | timestamptz | Auto-generated timestamp |
 
-### contacts
-| Column | Type | Description |
-|---|---|---|
-| id | uuid | Primary key, auto-generated |
-| name | text | Sender name |
-| email | text | Sender email |
-| message | text | Message content |
-| created_at | timestamptz | Auto-generated timestamp |
-
 ---
 
 ## 🎨 Customization
@@ -378,5 +369,6 @@ This project is open source and available under the MIT License.
 - Design inspired by cybersecurity aesthetics
 - Fonts: Playfair Display, DM Mono, Instrument Sans (Google Fonts)
 - Icons: Unicode emoji set
+
 
 
