@@ -84,10 +84,10 @@ import { api } from '../services/api.js'
 import { vReveal } from '../directives/reveal'
 
 const links = [
-  { icon: '✉', label: 'hello@yourname.dev', href: 'mailto:hello@yourname.dev' },
-  { icon: '⌥', label: 'github.com/yourhandle', href: 'https://github.com', ext: true },
-  { icon: '◈', label: 'linkedin.com/in/yourname', href: 'https://linkedin.com', ext: true },
-  { icon: '🎯', label: 'TryHackMe Profile', href: 'https://tryhackme.com', ext: true }
+  { icon: '✉', label: 'jansultan905@gmail.com', href: 'jansultan905@gmail.com' },
+  { icon: '⌥', label: 'github.com/achlys0165', href: 'http://github.com/achlys0165', ext: true },
+  { icon: '◈', label: 'linkedin.com/in/jansultan0210', href: 'http://www.linkedin.com/in/jansultan0210', ext: true },
+  { icon: '🎯', label: 'TryHackMe Profile', href: 'https://tryhackme.com/p/jgsultan', ext: true }
 ]
 
 const form = ref({ name: '', email: '', message: '' })
