@@ -117,6 +117,10 @@ my-profile/
 ├── README.md                     # This file
 └── .gitignore
 
+```
+
+---
+
 ## 🚦 Getting Started
 
 ### Prerequisites
@@ -128,20 +132,24 @@ my-profile/
 ```bash
 git clone [https://github.com/yourusername/my-profile.git](https://github.com/yourusername/my-profile.git)
 cd my-profile/main
+```
 
 ### 2. Setup Frontend
 
 ```bash
 cd frontend
 npm install
+```
 
 Create `.env.local`:
 ```env
 VITE_API_URL=http://localhost:5000
+```
 
 Start development server:
 ```bash
 npm run dev
+```
 
 ### 3. Setup Backend
 
@@ -156,15 +164,20 @@ venv\Scripts\activate
 source venv/bin/activate
 
 pip install -r requirements.txt
+```
 
 Create `.env`:
 ```env
 SUPABASE_URL=[https://your-project.supabase.co](https://your-project.supabase.co)
 SUPABASE_SERVICE_KEY=your-service-role-key
+```
 
 Start Flask server:
 ```bash
 python app.py
+```
+
+---
 
 ## 🔐 Environment Variables
 
@@ -193,6 +206,7 @@ python app.py
 # Using Vercel CLI
 npm i -g vercel
 vercel --prod
+```
 
 ### Backend (Render)
 1. Push code to GitHub
@@ -221,6 +235,9 @@ alter table contacts enable row level security;
 
 create policy "Public can read guestbook" on guestbook for select using (true);
 create policy "Public can insert guestbook" on guestbook for insert with check (true);
+```
+
+---
 
 ## 📡 API Documentation
 
@@ -236,6 +253,7 @@ Check API status.
 {
   "status": "ok"
 }
+```
 
 #### `GET /api/guestbook`
 Retrieve all guestbook entries (newest first).
@@ -252,6 +270,7 @@ Retrieve all guestbook entries (newest first).
     }
   ]
 }
+```
 
 #### `POST /api/guestbook`
 Create new guestbook entry.
@@ -262,6 +281,7 @@ Create new guestbook entry.
   "name": "John Doe",
   "message": "Your message here"
 }
+```
 
 *Validation: `name` (required, max 40 chars), `message` (required, max 280 chars)*
 
@@ -275,8 +295,13 @@ Submit contact form.
   "email": "john@example.com",
   "message": "Your message"
 }
+```
 
 *Validation: `name` (required), `email` (required, must contain @)*
+
+---
+
+---
 
 ## 🗄 Database Schema
 
@@ -311,6 +336,9 @@ Edit CSS variables in `src/App.vue`:
   --white: #fafaf9;     /* Text */
   --muted: #7a6d80;     /* Muted text */
 }
+```
+
+---
 
 ### Projects
 Edit `src/sections/ProjectsSection.vue`:
@@ -325,6 +353,9 @@ const projects = ref([
     github: '[https://github.com/username/repo](https://github.com/username/repo)'
   }
 ])
+```
+
+---
 
 ### Profile Info
 Update in:
@@ -347,4 +378,5 @@ This project is open source and available under the MIT License.
 - Design inspired by cybersecurity aesthetics
 - Fonts: Playfair Display, DM Mono, Instrument Sans (Google Fonts)
 - Icons: Unicode emoji set
+
 
