@@ -16,46 +16,63 @@
         <div class="clinks">
           <ContactLink v-for="link in links" :key="link.label" :link="link" />
         </div>
-        
-        <div class="status-indicator">
-          <span class="status-dot" :class="{ online: apiStatus }"></span>
-          <span class="status-text">{{ apiStatus ? 'API Online' : 'API Offline' }}</span>
-        </div>
       </div>
       
-      <form class="cf" @submit.prevent="sendMessage">
+      <!-- Formspree Contact Form -->
+      <form 
+        :action="formspreeUrl" 
+        method="POST"
+        class="cf"
+        @submit.prevent="handleSubmit"
+      >
+        <!-- Hidden field for redirect after submission -->
+        <input type="hidden" name="_next" :value="redirectUrl">
+        
+        <!-- Optional: subject line -->
+        <input type="hidden" name="_subject" value="New message from portfolio">
+        
+        <!-- Optional: disable captcha -->
+        <input type="hidden" name="_captcha" value="false">
+        
         <div class="cf-row">
           <div class="fl">
-            <label>Name *</label>
+            <label for="name">Name *</label>
             <input 
-              v-model="form.name" 
+              id="name"
+              v-model="form.name"
               type="text" 
+              name="name"
               class="cfi" 
               placeholder="your name" 
               required
-              :disabled="isSending"
+              :disabled="isSubmitting"
             >
           </div>
           <div class="fl">
-            <label>Email *</label>
+            <label for="email">Email *</label>
             <input 
-              v-model="form.email" 
+              id="email"
+              v-model="form.email"
               type="email" 
+              name="email"
               class="cfi" 
               placeholder="you@example.com" 
               required
-              :disabled="isSending"
+              :disabled="isSubmitting"
             >
           </div>
         </div>
         
         <div class="fl">
-          <label>Message</label>
+          <label for="message">Message *</label>
           <textarea 
-            v-model="form.message" 
+            id="message"
+            v-model="form.message"
+            name="message"
             class="cft" 
             placeholder="What's on your mind?"
-            :disabled="isSending"
+            required
+            :disabled="isSubmitting"
           ></textarea>
         </div>
         
@@ -63,14 +80,18 @@
           <button 
             type="submit" 
             class="btn btn-pri" 
-            :disabled="isSending || !form.name || !form.email"
+            :disabled="isSubmitting || !form.name || !form.email || !form.message"
           >
-            <span v-if="isSending" class="spinner"></span>
-            {{ isSending ? 'Sending...' : (sent ? 'Sent ✓' : 'Send Message →') }}
+            <span v-if="isSubmitting" class="spinner"></span>
+            {{ buttonText }}
           </button>
           
-          <span v-if="error" class="error-msg">{{ error }}</span>
-          <span v-if="sent && !error" class="success-msg">Message sent! I'll get back to you soon.</span>
+          <span v-if="status === 'success'" class="success-msg">
+            Message sent! I'll get back to you soon.
+          </span>
+          <span v-if="status === 'error'" class="error-msg">
+            Something went wrong. Please try again.
+          </span>
         </div>
       </form>
     </div>
@@ -78,10 +99,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import ContactLink from './ContactLink.vue'
-import { api } from '../services/api.js'
 import { vReveal } from '../directives/reveal'
+
+const formspreeId = 'mnjbrlqa' // e.g., 'xeqwdyky'
+const formspreeUrl = `https://formspree.io/f/${formspreeId}`
+const redirectUrl = 'https://jan-sultan.vercel.app?message=sent'
 
 const links = [
   { icon: '✉', label: 'jansultan905@gmail.com', href: 'jansultan905@gmail.com' },
@@ -91,50 +115,41 @@ const links = [
 ]
 
 const form = ref({ name: '', email: '', message: '' })
-const isSending = ref(false)
-const sent = ref(false)
-const error = ref('')
-const apiStatus = ref(false)
+const isSubmitting = ref(false)
+const status = ref('idle') // 'idle' | 'submitting' | 'success' | 'error'
 
-const checkStatus = async () => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/health`)
-    apiStatus.value = res.ok
-  } catch (e) {
-    apiStatus.value = false
-  }
-}
+const buttonText = computed(() => {
+  if (isSubmitting.value) return 'Sending...'
+  if (status.value === 'success') return 'Sent ✓'
+  return 'Send Message →'
+})
 
-const sendMessage = async () => {
-  if (!form.value.name || !form.value.email) return
-  
-  isSending.value = true
-  error.value = ''
+const handleSubmit = async (e) => {
+  isSubmitting.value = true
+  status.value = 'submitting'
   
   try {
-    const res = await api.sendContact({
-      name: form.value.name,
-      email: form.value.email,
-      message: form.value.message
+    const response = await fetch(formspreeUrl, {
+      method: 'POST',
+      body: new FormData(e.target),
+      headers: {
+        'Accept': 'application/json'
+      }
     })
     
-    if (res.success) {
+    if (response.ok) {
+      status.value = 'success'
       form.value = { name: '', email: '', message: '' }
-      sent.value = true
-      setTimeout(() => sent.value = false, 5000)
+    } else {
+      status.value = 'error'
     }
-  } catch (e) {
-    error.value = 'Failed to send. Please try again or email directly.'
-    console.error(e)
+  } catch (err) {
+    console.error('Form submission error:', err)
+    status.value = 'error'
   } finally {
-    isSending.value = false
+    isSubmitting.value = false
   }
 }
-
-onMounted(() => {
-  checkStatus()
-  setInterval(checkStatus, 30000)
-})
 </script>
 
 <style scoped>
@@ -173,29 +188,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted2);
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--muted2);
-  transition: background 0.3s;
-}
-
-.status-dot.online {
-  background: #28c840;
-  box-shadow: 0 0 8px #28c840;
 }
 
 .cf {
@@ -215,6 +207,7 @@ onMounted(() => {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-top: 0.5rem;
 }
 
 .spinner {
@@ -232,16 +225,21 @@ onMounted(() => {
   to { transform: rotate(360deg); }
 }
 
+.success-msg {
+  color: var(--pink);
+  font-size: 12px;
+  font-family: var(--mono);
+}
+
 .error-msg {
   color: #ff6b6b;
   font-size: 12px;
   font-family: var(--mono);
 }
 
-.success-msg {
-  color: var(--pink);
-  font-size: 12px;
-  font-family: var(--mono);
+/* Disable default form styles */
+.cf:disabled {
+  opacity: 0.7;
 }
 
 @media (max-width: 860px) {
@@ -252,12 +250,6 @@ onMounted(() => {
   
   .cf-row {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 861px) and (max-width: 1024px) {
-  .contact-layout {
-    gap: 3rem;
   }
 }
 </style>
